@@ -61,8 +61,8 @@ namespace SuperSocket.Tests
 
             using(var host = hostBuilder.Build())
             {
-                await host.StartAsync();
-                await host.StopAsync();
+                await host.StartAsync(this.CancellationToken);
+                await host.StopAsync(this.CancellationToken);
             }
         }
 
@@ -203,7 +203,7 @@ namespace SuperSocket.Tests
                 Assert.Same(server2, server2.ServiceProvider.GetService<IServerInfo>());
                 Assert.Same(server2, server2.ServiceProvider.GetService<MyLocalTestService>().Server);
 
-                await host.StopAsync();
+                await host.StopAsync(this.CancellationToken);
             }
         }
 
@@ -280,31 +280,31 @@ namespace SuperSocket.Tests
 
             using (var host = hostBuilder.Build())
             {
-                await host.StartAsync();
+                await host.StartAsync(this.CancellationToken);
 
                 var client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                await client.ConnectAsync(GetDefaultServerEndPoint());
+                await client.ConnectAsync(GetDefaultServerEndPoint(), this.CancellationToken);
 
                 using (var stream = new NetworkStream(client))
                 using (var streamReader = new StreamReader(stream, Utf8Encoding, true))
                 using (var streamWriter = new StreamWriter(stream, Utf8Encoding, 1024 * 1024 * 4))
                 {
-                    var line = await streamReader.ReadLineAsync();
+                    var line = await streamReader.ReadLineAsync(this.CancellationToken);
                     Assert.Equal(serverName1, line);
                 }
 
                 client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                await client.ConnectAsync(GetAlternativeServerEndPoint());
+                await client.ConnectAsync(GetAlternativeServerEndPoint(), this.CancellationToken);
 
                 using (var stream = new NetworkStream(client))
                 using (var streamReader = new StreamReader(stream, Utf8Encoding, true))
                 using (var streamWriter = new StreamWriter(stream, Utf8Encoding, 1024 * 1024 * 4))
                 {
-                    var line = await streamReader.ReadLineAsync();
+                    var line = await streamReader.ReadLineAsync(this.CancellationToken);
                     Assert.Equal(serverName2, line);
                 }
 
-                await host.StopAsync();
+                await host.StopAsync(this.CancellationToken);
             }
         }
 
