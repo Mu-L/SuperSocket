@@ -6,7 +6,7 @@ using SuperSocket.ProtoBase;
 
 namespace SuperSocket.WebSocket.Server
 {
-    interface IWebSocketCommandMiddleware : IMiddleware
+    public interface IWebSocketCommandMiddleware : IMiddleware
     {
 
     }
