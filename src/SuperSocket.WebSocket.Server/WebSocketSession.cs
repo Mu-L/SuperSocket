@@ -59,9 +59,19 @@ namespace SuperSocket.WebSocket.Server
         /// Sends a WebSocket package asynchronously.
         /// </summary>
         /// <param name="message">The WebSocket package to send.</param>
+        /// <returns>A task that represents the asynchronous send operation.</returns>
+        public virtual ValueTask SendAsync(WebSocketPackage message)
+        {
+            return this.SendAsync(message, this.Connection.ConnectionToken);
+        }
+
+        /// <summary>
+        /// Sends a WebSocket package asynchronously.
+        /// </summary>
+        /// <param name="message">The WebSocket package to send.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A task that represents the asynchronous send operation.</returns>
-        public virtual ValueTask SendAsync(WebSocketPackage message, CancellationToken cancellationToken = default)
+        public virtual ValueTask SendAsync(WebSocketPackage message, CancellationToken cancellationToken)
         {
             return this.Connection.SendAsync(MessageEncoder, message, cancellationToken);
         }
@@ -70,9 +80,19 @@ namespace SuperSocket.WebSocket.Server
         /// Sends a text message asynchronously.
         /// </summary>
         /// <param name="message">The text message to send.</param>
+        /// <returns>A task that represents the asynchronous send operation.</returns>
+        public virtual ValueTask SendAsync(string message)
+        {
+            return SendAsync(message, this.Connection.ConnectionToken);
+        }
+
+        /// <summary>
+        /// Sends a text message asynchronously.
+        /// </summary>
+        /// <param name="message">The text message to send.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A task that represents the asynchronous send operation.</returns>
-        public virtual ValueTask SendAsync(string message, CancellationToken cancellationToken = default)
+        public virtual ValueTask SendAsync(string message, CancellationToken cancellationToken)
         {
             return SendAsync(new WebSocketPackage
                 {
@@ -86,9 +106,19 @@ namespace SuperSocket.WebSocket.Server
         /// Sends binary data asynchronously.
         /// </summary>
         /// <param name="data">The binary data to send.</param>
+        /// <returns>A task that represents the asynchronous send operation.</returns>
+        public virtual ValueTask SendAsync(ReadOnlyMemory<byte> data)
+        {
+            return SendAsync(data, this.Connection.ConnectionToken);
+        }
+
+        /// <summary>
+        /// Sends binary data asynchronously.
+        /// </summary>
+        /// <param name="data">The binary data to send.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A task that represents the asynchronous send operation.</returns>
-        public virtual ValueTask SendAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
+        public virtual ValueTask SendAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken)
         {
             return SendAsync(new WebSocketPackage
                 {
@@ -102,9 +132,19 @@ namespace SuperSocket.WebSocket.Server
         /// Sends binary data asynchronously.
         /// </summary>
         /// <param name="data">The binary data to send.</param>
+        /// <returns>A task that represents the asynchronous send operation.</returns>
+        public virtual ValueTask SendAsync(ReadOnlySequence<byte> data)
+        {
+            return SendAsync(data, this.Connection.ConnectionToken);
+        }
+
+        /// <summary>
+        /// Sends binary data asynchronously.
+        /// </summary>
+        /// <param name="data">The binary data to send.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A task that represents the asynchronous send operation.</returns>
-        public virtual ValueTask SendAsync(ReadOnlySequence<byte> data, CancellationToken cancellationToken = default)
+        public virtual ValueTask SendAsync(ReadOnlySequence<byte> data, CancellationToken cancellationToken)
         {
             return SendAsync(new WebSocketPackage
                 {
