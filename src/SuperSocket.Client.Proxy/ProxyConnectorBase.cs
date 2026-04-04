@@ -37,6 +37,14 @@ namespace SuperSocket.Client.Proxy
         protected abstract ValueTask<ConnectState> ConnectProxyAsync(EndPoint remoteEndPoint, ConnectState state, CancellationToken cancellationToken);
 
         /// <summary>
+        ///  Creates the default connector for the proxy connection.
+        /// </summary>
+        protected virtual IConnector CreateDefaultConnector()
+        {
+            return new SocketConnector();
+        }
+
+        /// <summary>
         /// Establishes a connection to the specified remote endpoint through the proxy.
         /// </summary>
         /// <param name="remoteEndPoint">The remote endpoint to connect to.</param>
@@ -49,7 +57,7 @@ namespace SuperSocket.Client.Proxy
         /// </remarks>
         protected override async ValueTask<ConnectState> ConnectAsync(EndPoint remoteEndPoint, ConnectState state, CancellationToken cancellationToken)
         {
-            var socketConnector = new SocketConnector() as IConnector;
+            var socketConnector = CreateDefaultConnector();
             var proxyEndPoint = _proxyEndPoint;
 
             ConnectState result;

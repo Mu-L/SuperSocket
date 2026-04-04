@@ -17,6 +17,14 @@ namespace SuperSocket.Client
         public IPEndPoint LocalEndPoint { get; private set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the Nagle algorithm is disabled for the socket.
+         /// When set to true, the socket will send data immediately without waiting to accumulate more data.
+         /// This can improve performance for certain applications that require low latency, but may increase network traffic.
+         /// The default value is true.
+         /// </summary>
+        public bool NoDelay { get; set; } = true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SocketConnector"/> class with default settings.
         /// </summary>
         public SocketConnector()
@@ -32,6 +40,26 @@ namespace SuperSocket.Client
             : base()
         {
             LocalEndPoint = localEndPoint;
+        }
+
+        /// <summary>
+        /// Configures the socket with the specified settings before connecting.
+         /// This method can be overridden to customize the socket configuration, such as setting socket options or binding to a local endpoint.
+         /// By default, it sets the NoDelay property and binds to the LocalEndPoint if it is specified.
+        /// </summary>
+        /// <param name="socket">The socket to configure.</param>
+        protected virtual void ConfigureSocket(Socket socket)
+        {
+            socket.NoDelay = NoDelay;
+
+            var localEndPoint = LocalEndPoint;
+
+            if (localEndPoint != null)
+            {
+                socket.ExclusiveAddressUse = false;
+                socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+                socket.Bind(localEndPoint);
+            }
         }
 
         /// <summary>
@@ -52,14 +80,8 @@ namespace SuperSocket.Client
 
             try
             {
-                var localEndPoint = LocalEndPoint;
-
-                if (localEndPoint != null)
-                {
-                    socket.ExclusiveAddressUse = false;
-                    socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
-                    socket.Bind(localEndPoint);
-                }
+                ConfigureSocket(socket);
+                
 #if NET5_0_OR_GREATER
                 await socket.ConnectAsync(remoteEndPoint, cancellationToken);
 #else

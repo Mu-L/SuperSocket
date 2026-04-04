@@ -98,6 +98,15 @@ namespace SuperSocket.Client
         }
 
         /// <summary>
+        /// Creates the default connector for the client.
+        /// </summary>
+        /// <returns>The default connector.</returns>
+        protected IConnector CreateDefaultConnector()
+        {
+            return new SocketConnector(LocalEndPoint);
+        }
+
+        /// <summary>
         /// Gets the connector for the client.
         /// </summary>
         /// <returns>The connector to use for the client.</returns>
@@ -111,7 +120,7 @@ namespace SuperSocket.Client
             }
             else
             {
-                connectors.Add(new SocketConnector(LocalEndPoint));
+                connectors.Add(CreateDefaultConnector());
             }
 
             var security = Security;
